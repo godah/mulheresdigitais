@@ -8,12 +8,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @SpringBootApplication
 public class Application {
 
-	@RequestMapping("/")
-	@ResponseBody
-	String home() {
-		return "Hello World!";
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}

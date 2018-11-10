@@ -1,0 +1,9 @@
+http://localhost:8080/user/post?name=Luciano20&email=luciano3@gmail.com&description=description&senha=abc&tipoUsuario=1&imageUsuario=1
+
+http://localhost:8080/user/put?id=20&name=Luciano20&email=luciano3@gmail.com&description=description&senha=abc&tipoUsuario=1&imageUsuario=1
+
+http://localhost:8080/user/list
+
+http://localhost:8080/user/find?id=20
+
+http://localhost:8080/user/delete?id=20

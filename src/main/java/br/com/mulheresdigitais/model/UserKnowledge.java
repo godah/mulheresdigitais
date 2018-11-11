@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Table(name = "rel_user_knowledge")
 public class UserKnowledge {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
 
 	@ManyToOne(fetch = FetchType.EAGER)

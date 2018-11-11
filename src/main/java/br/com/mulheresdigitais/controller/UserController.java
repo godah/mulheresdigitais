@@ -20,30 +20,30 @@ import br.com.mulheresdigitais.model.User;
 import br.com.mulheresdigitais.repository.UserRepository;
 import javassist.NotFoundException;
 
-@CrossOrigin 
+@CrossOrigin
 @RestController
 public class UserController {
-	private final Log log = LogFactory.getLog(User.class);
+	private final Log log = LogFactory.getLog(UserController.class);
 	private static final String MD5 = "MD5";
 	private static final String ROUTE = "users";
-	
+
 	@Autowired
 	private UserRepository userRepository;
 
 	@CrossOrigin
-	@GetMapping(path = "/"+ROUTE)
+	@GetMapping(path = "/" + ROUTE)
 	public @ResponseBody Iterable<User> list() {
 		return userRepository.findAll();
 	}
 
 	@CrossOrigin
-	@GetMapping(path = "/"+ROUTE+"/{id}")
+	@GetMapping(path = "/" + ROUTE + "/{id}")
 	public @ResponseBody User find(@PathVariable Integer id) throws NotFoundException {
 		return userRepository.findById(id).orElseThrow(() -> new NotFoundException("NotFound"));
 	}
 
 	@CrossOrigin
-	@PostMapping(path = "/"+ROUTE)
+	@PostMapping(path = "/" + ROUTE)
 	public @ResponseBody User add(@RequestBody User user) {
 		MessageDigest md;
 		try {
@@ -59,7 +59,7 @@ public class UserController {
 	}
 
 	@CrossOrigin
-	@PutMapping(path = "/"+ROUTE+"/{id}")
+	@PutMapping(path = "/" + ROUTE + "/{id}")
 	public @ResponseBody User update(@PathVariable Integer id, @RequestBody User user) {
 		MessageDigest md;
 		try {
@@ -86,7 +86,7 @@ public class UserController {
 	}
 
 	@CrossOrigin
-	@DeleteMapping(path = "/"+ROUTE+"/{id}")
+	@DeleteMapping(path = "/" + ROUTE + "/{id}")
 	public @ResponseBody void remove(@PathVariable Integer id) {
 		userRepository.deleteById(id);
 	}

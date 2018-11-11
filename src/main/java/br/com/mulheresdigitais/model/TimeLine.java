@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @Table(name = "timeline")
 public class TimeLine {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
 
 	private String title;

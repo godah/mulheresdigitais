@@ -6,141 +6,88 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import br.com.mulheresdigitais.model.User;
-import br.com.mulheresdigitais.model.UserImage;
-import br.com.mulheresdigitais.model.UserType;
-import br.com.mulheresdigitais.repository.UserImageRepository;
 import br.com.mulheresdigitais.repository.UserRepository;
-import br.com.mulheresdigitais.repository.UserTypeRepository;
+import javassist.NotFoundException;
 
 @CrossOrigin 
-@Controller 
-@RequestMapping(path = "/user")
+@RestController
 public class UserController {
-	Log log = LogFactory.getLog(UserController.class);
+	private final Log log = LogFactory.getLog(User.class);
+	private static final String MD5 = "MD5";
+	private static final String ROUTE = "users";
 	
-	@Autowired 
+	@Autowired
 	private UserRepository userRepository;
-	
-	@Autowired
-	private UserTypeRepository userTypeRepository;
-	
-	@Autowired
-	private UserImageRepository userImageRepository;
-
-	@CrossOrigin 
-	@GetMapping(path = "/post") 
-	public @ResponseBody String post(
-			@RequestParam String name, 
-			@RequestParam String email,
-			@RequestParam String description,
-			@RequestParam String senha,
-			@RequestParam String tipoUsuario,
-			@RequestParam String imageUsuario) {
-		
-		MessageDigest md;
-		try {
-			md = MessageDigest.getInstance("MD5");
-			String passwd = senha;
-			md.update(passwd.getBytes(),0,passwd.length());
-
-			User n = new User(); 
-			UserType ut = userTypeRepository.findById(Integer.parseInt(tipoUsuario)).get();
-			if(!imageUsuario.isEmpty()) {
-				UserImage ui = userImageRepository.findById(Integer.parseInt(imageUsuario)).get();
-				n.setImage(ui);
-			}
-			
-			n.setName(name);
-			n.setEmail(email);
-			n.setDescription(description);
-			n.setPwd(Integer.toString(md.digest().hashCode()));
-			n.setUserType(ut);
-
-			userRepository.save(n);
-			return "Saved";
-		} catch (NoSuchAlgorithmException e) {
-			log.error(e.getMessage(),e);
-			return e.getMessage();
-		}
-	}
-	
-	@CrossOrigin 
-	@GetMapping(path = "/put") // Map ONLY GET Requests
-	public @ResponseBody String put(
-			@RequestParam String id, 
-			@RequestParam String name, 
-			@RequestParam String email,
-			@RequestParam String description,
-			@RequestParam String senha,
-			@RequestParam String tipoUsuario,
-			@RequestParam String imageUsuario) {
-		
-		MessageDigest md;
-		try {
-			md = MessageDigest.getInstance("MD5");
-			User n = null;
-			
-			if(!id.isEmpty()) {
-				n = userRepository.findById(Integer.parseInt(id)).get(); 
-			}else {
-				return "Falhou";
-			}
-			
-			if(!tipoUsuario.isEmpty()) {
-				UserType ut = userTypeRepository.findById(Integer.parseInt(tipoUsuario)).get();
-				n.setUserType(ut);
-			}
-			
-			if(!imageUsuario.isEmpty()) {
-				UserImage ui = userImageRepository.findById(Integer.parseInt(imageUsuario)).get();
-				n.setImage(ui);
-			}
-			if(!name.isEmpty())
-				n.setName(name);
-			if(!email.isEmpty())
-				n.setEmail(email);
-			if(!description.isEmpty())
-				n.setDescription(description);
-			if(!senha.isEmpty()) {
-				String passwd = senha;
-				md.update(passwd.getBytes(),0,passwd.length());
-				n.setPwd(Integer.toString(md.digest().hashCode()));
-			}
-
-			userRepository.save(n);
-			return "Saved";
-		} catch (NoSuchAlgorithmException e) {
-			log.error(e.getMessage(),e);
-			return e.getMessage();
-		}
-	}
 
 	@CrossOrigin
-	@GetMapping(path = "/list")
+	@GetMapping(path = "/"+ROUTE)
 	public @ResponseBody Iterable<User> list() {
 		return userRepository.findAll();
 	}
-	
+
 	@CrossOrigin
-	@GetMapping(path = "/find")
-	public @ResponseBody User find(
-			@RequestParam String id) {
-		return userRepository.findById(Integer.parseInt(id)).get();
+	@GetMapping(path = "/"+ROUTE+"/{id}")
+	public @ResponseBody User find(@PathVariable Integer id) throws NotFoundException {
+		return userRepository.findById(id).orElseThrow(() -> new NotFoundException("NotFound"));
 	}
-	
+
 	@CrossOrigin
-	@GetMapping(path = "/delete")
-	public @ResponseBody String delete(
-			@RequestParam String id) {
-		userRepository.deleteById(Integer.parseInt(id));
-		return "Removed";
+	@PostMapping(path = "/"+ROUTE)
+	public @ResponseBody User add(@RequestBody User user) {
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance(MD5);
+			String passwd = user.getPwd();
+			md.update(passwd.getBytes(), 0, passwd.length());
+			user.setPwd(Integer.toString(md.digest().hashCode()));
+			return userRepository.save(user);
+		} catch (NoSuchAlgorithmException e) {
+			log.error(e.getMessage(), e);
+			return null;
+		}
+	}
+
+	@CrossOrigin
+	@PutMapping(path = "/"+ROUTE+"/{id}")
+	public @ResponseBody User update(@PathVariable Integer id, @RequestBody User user) {
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance(MD5);
+			String passwd = user.getPwd();
+			md.update(passwd.getBytes(), 0, passwd.length());
+			user.setPwd(Integer.toString(md.digest().hashCode()));
+			return userRepository.findById(id).map(usr -> {
+				usr.setDescription(user.getDescription());
+				usr.setEmail(user.getEmail());
+				usr.setImage(user.getImage());
+				usr.setName(user.getName());
+				user.setPwd(user.getPwd());
+				user.setUserType(user.getUserType());
+				return userRepository.save(usr);
+			}).orElseGet(() -> {
+				user.setId(id);
+				return userRepository.save(user);
+			});
+		} catch (NoSuchAlgorithmException e) {
+			log.error(e.getMessage(), e);
+		}
+		return user;
+	}
+
+	@CrossOrigin
+	@DeleteMapping(path = "/"+ROUTE+"/{id}")
+	public @ResponseBody void remove(@PathVariable Integer id) {
+		userRepository.deleteById(id);
 	}
 }

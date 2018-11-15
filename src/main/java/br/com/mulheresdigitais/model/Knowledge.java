@@ -13,7 +13,7 @@ public class Knowledge {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
 
-	private String description;
+	private String knowledgedescription;
 
 	public Integer getId() {
 		return id;
@@ -23,12 +23,12 @@ public class Knowledge {
 		this.id = id;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getKnowledgedescription() {
+		return knowledgedescription;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setKnowledgedescription(String knowledgedescription) {
+		this.knowledgedescription = knowledgedescription;
 	}
 
 }

@@ -32,7 +32,7 @@ public class User {
 	
 	private String country;
 
-	private String description;
+	private String userdescription;
 
 	@Nullable
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -75,12 +75,12 @@ public class User {
 		this.pwd = pwd;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getUserdescription() {
+		return userdescription;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setUserdescription(String userdescription) {
+		this.userdescription = userdescription;
 	}
 
 	public UserType getUserType() {

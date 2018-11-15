@@ -20,7 +20,7 @@ public class Lesson {
 
 	private String title;
 
-	private String description;
+	private String lessondescription;
 
 	private String video;
 
@@ -54,12 +54,12 @@ public class Lesson {
 		this.title = title;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getLessondescription() {
+		return lessondescription;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setLessondescription(String lessondescription) {
+		this.lessondescription = lessondescription;
 	}
 
 	public String getVideo() {

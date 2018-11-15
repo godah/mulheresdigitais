@@ -46,7 +46,7 @@ public class LessonController {
 	public @ResponseBody Lesson update(@PathVariable Integer id, @RequestBody Lesson lesson) {
 		return lessonRepository.findById(id).map(less -> {
 			less.setDate(lesson.getDate());
-			less.setDescription(lesson.getDescription());
+			less.setLessondescription(lesson.getLessondescription());
 			less.setTitle(lesson.getTitle());
 			less.setUserKnowledge(lesson.getUserKnowledge());
 			less.setVideo(lesson.getVideo());

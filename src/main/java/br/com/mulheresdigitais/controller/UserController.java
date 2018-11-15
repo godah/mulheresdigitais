@@ -68,7 +68,7 @@ public class UserController {
 			md.update(passwd.getBytes(), 0, passwd.length());
 			user.setPwd(Integer.toString(md.digest().hashCode()));
 			return userRepository.findById(id).map(usr -> {
-				usr.setDescription(user.getDescription());
+				usr.setUserdescription(user.getUserdescription());
 				usr.setEmail(user.getEmail());
 				usr.setImage(user.getImage());
 				usr.setName(user.getName());

@@ -45,7 +45,7 @@ public class KnowledgeController {
 	@PutMapping(path = "/" + ROUTE + "/{id}")
 	public @ResponseBody Knowledge update(@PathVariable Integer id, @RequestBody Knowledge knowledge) {
 		return knowledgeRepository.findById(id).map(know -> {
-			know.setDescription(knowledge.getDescription());
+			know.setKnowledgedescription(knowledge.getKnowledgedescription());
 			return knowledgeRepository.save(know);
 		}).orElseGet(() -> {
 			knowledge.setId(id);

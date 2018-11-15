@@ -72,8 +72,12 @@ public class UserController {
 				usr.setEmail(user.getEmail());
 				usr.setImage(user.getImage());
 				usr.setName(user.getName());
-				user.setPwd(user.getPwd());
-				user.setUserType(user.getUserType());
+				usr.setPwd(user.getPwd());
+				usr.setFirstname(user.getFirstname());
+				usr.setLastname(user.getLastname());
+				usr.setCity(user.getCity());
+				usr.setCountry(user.getCountry());
+				usr.setUserType(user.getUserType());
 				return userRepository.save(usr);
 			}).orElseGet(() -> {
 				user.setId(id);

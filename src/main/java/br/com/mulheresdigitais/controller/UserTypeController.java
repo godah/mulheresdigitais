@@ -45,7 +45,7 @@ public class UserTypeController {
 	@PutMapping(path = "/" + ROUTE + "/{id}")
 	public @ResponseBody UserType update(@PathVariable Integer id, @RequestBody UserType userType) {
 		return userTypeRepository.findById(id).map(ut -> {
-			ut.setDescription(userType.getDescription());
+			ut.setTypeuserdescription(userType.getTypeuserdescription());
 			return userTypeRepository.save(ut);
 		}).orElseGet(() -> {
 			userType.setId(id);

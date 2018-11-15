@@ -13,7 +13,7 @@ public class UserType {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
 
-	private String description;
+	private String typeuserdescription;
 
 	public Integer getId() {
 		return id;
@@ -23,12 +23,12 @@ public class UserType {
 		this.id = id;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getTypeuserdescription() {
+		return typeuserdescription;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setTypeuserdescription(String typeuserdescription) {
+		this.typeuserdescription = typeuserdescription;
 	}
 
 }

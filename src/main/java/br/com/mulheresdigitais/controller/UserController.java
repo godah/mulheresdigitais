@@ -1,7 +1,9 @@
 package br.com.mulheresdigitais.controller;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,9 +50,8 @@ public class UserController {
 		MessageDigest md;
 		try {
 			md = MessageDigest.getInstance(MD5);
-			String passwd = user.getPwd();
-			md.update(passwd.getBytes(), 0, passwd.length());
-			user.setPwd(Integer.toString(md.digest().hashCode()));
+			BigInteger hash = new BigInteger(1, md.digest(user.getPwd().getBytes()));
+			user.setPwd(String.format("%32x", hash));
 			return userRepository.save(user);
 		} catch (NoSuchAlgorithmException e) {
 			log.error(e.getMessage(), e);
@@ -64,9 +65,8 @@ public class UserController {
 		MessageDigest md;
 		try {
 			md = MessageDigest.getInstance(MD5);
-			String passwd = user.getPwd();
-			md.update(passwd.getBytes(), 0, passwd.length());
-			user.setPwd(Integer.toString(md.digest().hashCode()));
+			BigInteger hash = new BigInteger(1, md.digest(user.getPwd().getBytes()));
+			user.setPwd(String.format("%32x", hash));
 			return userRepository.findById(id).map(usr -> {
 				usr.setUserdescription(user.getUserdescription());
 				usr.setEmail(user.getEmail());
@@ -93,5 +93,25 @@ public class UserController {
 	@DeleteMapping(path = "/" + ROUTE + "/{id}")
 	public @ResponseBody void remove(@PathVariable Integer id) {
 		userRepository.deleteById(id);
+	}
+	
+	@CrossOrigin
+	@PostMapping(path = "/" + ROUTE + "/login")
+	public @ResponseBody User login(@RequestBody User user) {
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance(MD5);
+			BigInteger hash = new BigInteger(1, md.digest(user.getPwd().getBytes()));
+			user.setPwd(String.format("%32x", hash));
+			List<User> users = (List<User>) userRepository.findAll();
+			User response = users.stream()
+					.filter(p -> p.getName().equals(user.getName()) && p.getPwd().equals(user.getPwd()))
+					.findFirst()
+					.orElse(null);
+			return response;
+		} catch (NoSuchAlgorithmException e) {
+			log.error(e.getMessage(), e);
+			return null;
+		}
 	}
 }

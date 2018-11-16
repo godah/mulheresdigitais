@@ -1,5 +1,10 @@
 package br.com.mulheresdigitais.controller;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -61,5 +66,20 @@ public class TimeLineController {
 	@DeleteMapping(path = "/" + ROUTE + "/{id}")
 	public @ResponseBody void remove(@PathVariable Integer id) {
 		timeLineRepository.deleteById(id);
+	}
+	
+
+	@CrossOrigin
+	@GetMapping(path = "/" + ROUTE + "/top15")
+	public @ResponseBody Iterable<TimeLine> top15() {
+		List<TimeLine> list = (List<TimeLine>) timeLineRepository.findAll();
+		List<TimeLine> listSorted = list.stream()
+				.sorted(Comparator.comparing(TimeLine::getDate).reversed())
+				.collect(Collectors.toList());
+		List<TimeLine> response = new ArrayList<>();
+		for(int i = 0; i < 15 && i < listSorted.size(); i++) {
+			response.add(listSorted.get(i));
+		}
+		return response;
 	}
 }

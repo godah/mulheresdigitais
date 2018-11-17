@@ -1,6 +1,8 @@
 package br.com.mulheresdigitais.controller;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -64,5 +66,13 @@ public class LessonController {
 	@DeleteMapping(path = "/" + ROUTE + "/{id}")
 	public @ResponseBody void remove(@PathVariable Integer id) {
 		lessonRepository.deleteById(id);
+	}
+	
+	@CrossOrigin
+	@GetMapping(path = "/" + ROUTE + "/user/{userId}")
+	public @ResponseBody Iterable<Lesson> getByUser(@PathVariable Integer userId) {
+		List<Lesson> list = (List<Lesson>) lessonRepository.findAll();
+		return list.stream().filter(p -> p.getUserKnowledge().getUser().getId().equals(userId))
+				.collect(Collectors.toList());
 	}
 }

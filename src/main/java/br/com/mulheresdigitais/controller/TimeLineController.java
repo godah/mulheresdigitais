@@ -84,4 +84,13 @@ public class TimeLineController {
 		}
 		return response;
 	}
+	
+	@CrossOrigin
+	@GetMapping(path = "/" + ROUTE + "/user/{userId}")
+	public @ResponseBody Iterable<TimeLine> getByUser(@PathVariable Integer userId) throws NotFoundException {
+		List<TimeLine> list = (List<TimeLine>) timeLineRepository.findAll();
+		return list.stream().filter(p -> p.getUser().getId().equals(userId))
+				.collect(Collectors.toList());
+	}
+	
 }

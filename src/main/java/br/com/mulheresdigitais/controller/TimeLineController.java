@@ -2,6 +2,7 @@ package br.com.mulheresdigitais.controller;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +44,7 @@ public class TimeLineController {
 	@CrossOrigin
 	@PostMapping(path = "/" + ROUTE)
 	public @ResponseBody TimeLine add(@RequestBody TimeLine timeLine) {
+		timeLine.setDate(new Date());
 		return timeLineRepository.save(timeLine);
 	}
 
@@ -50,7 +52,7 @@ public class TimeLineController {
 	@PutMapping(path = "/" + ROUTE + "/{id}")
 	public @ResponseBody TimeLine update(@PathVariable Integer id, @RequestBody TimeLine timeLine) {
 		return timeLineRepository.findById(id).map(tl -> {
-			tl.setDate(timeLine.getDate());
+			tl.setDate(new Date());
 			tl.setImage(timeLine.getImage());
 			tl.setText(timeLine.getText());
 			tl.setTitle(timeLine.getTitle());

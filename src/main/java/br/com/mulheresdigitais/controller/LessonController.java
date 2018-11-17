@@ -1,5 +1,7 @@
 package br.com.mulheresdigitais.controller;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,6 +40,7 @@ public class LessonController {
 	@CrossOrigin
 	@PostMapping(path = "/" + ROUTE)
 	public @ResponseBody Lesson add(@RequestBody Lesson lesson) {
+		lesson.setDate(new Date());
 		return lessonRepository.save(lesson);
 	}
 
@@ -45,7 +48,7 @@ public class LessonController {
 	@PutMapping(path = "/" + ROUTE + "/{id}")
 	public @ResponseBody Lesson update(@PathVariable Integer id, @RequestBody Lesson lesson) {
 		return lessonRepository.findById(id).map(less -> {
-			less.setDate(lesson.getDate());
+			less.setDate(new Date());
 			less.setLessondescription(lesson.getLessondescription());
 			less.setTitle(lesson.getTitle());
 			less.setUserKnowledge(lesson.getUserKnowledge());

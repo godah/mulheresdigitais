@@ -75,4 +75,21 @@ public class LessonController {
 		return list.stream().filter(p -> p.getUserKnowledge().getUser().getId().equals(userId))
 				.collect(Collectors.toList());
 	}
+	
+	@CrossOrigin
+	@GetMapping(path = "/" + ROUTE + "/pesquisar={keyWord}")
+	public @ResponseBody Iterable<Lesson> search(@PathVariable String keyWord) throws NotFoundException {
+		List<Lesson> list = (List<Lesson>) lessonRepository.findAll(); 
+		return list.stream()
+				.filter(p -> p.getTitle().toLowerCase().contains(keyWord.toLowerCase()) ||
+						p.getLessondescription().toLowerCase().contains(keyWord.toLowerCase()) ||
+						p.getVideo().toLowerCase().contains(keyWord.toLowerCase()) ||
+						p.getUserKnowledge().getKnowledge().getKnowledgedescription().toLowerCase().contains(keyWord.toLowerCase()) ||
+						p.getUserKnowledge().getUser().getUserdescription().toLowerCase().contains(keyWord.toLowerCase())||
+						p.getUserKnowledge().getUser().getName().toLowerCase().contains(keyWord.toLowerCase()) ||
+						p.getUserKnowledge().getUser().getFirstname().toLowerCase().contains(keyWord.toLowerCase()) || 
+						p.getUserKnowledge().getUser().getLastname().toLowerCase().contains(keyWord.toLowerCase()) ||
+						p.getUserKnowledge().getUser().getEmail().toLowerCase().contains(keyWord.toLowerCase()))
+				.collect(Collectors.toList());
+	}
 }
